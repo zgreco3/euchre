@@ -232,31 +232,30 @@ Suit Suit_next(Suit suit){
   }
 }
 
-bool Card_less(const Card &a, const Card &b, const std::string &trump){
-  Suit t = string_to_suit(trump);
-  if (a.is_trump(t) > b.is_trump(t)){
+bool Card_less(const Card &a, const Card &b, Suit trump){
+  if (a.is_trump(trump) > b.is_trump(trump)){
     return 0;
   }
-  else if (a.is_trump(t) < b.is_trump(t)){
+  else if (a.is_trump(trump) < b.is_trump(trump)){
     return 1;
   }
-  else if ((a.is_trump(t) == b.is_trump(t))){
-    if (a.is_right_bower(t)){
+  else{
+    if (a.is_right_bower(trump)){
       return 0;
     }
-    else if (b.is_right_bower(t)){
+    else if (b.is_right_bower(trump)){
       return 1;
     }
-    else if (a.is_left_bower(t)){
+    else if (a.is_left_bower(trump)){
       return 0;
     }
-    else if (b.is_left_bower(t)){
+    else if (b.is_left_bower(trump)){
       return 1;
     }
     else if (a < b){
       return 1;
     }
-    else if (b > a){
+    else{
       return 0;
     }
   }
@@ -264,39 +263,24 @@ bool Card_less(const Card &a, const Card &b, const std::string &trump){
 }
 
 bool Card_less(const Card &a, const Card &b, const Card &led_card,
-               const std::string &trump){
-  Suit t = string_to_suit(trump);
-  if(led_card.get_suit() == t){
-    if (a.is_right_bower(t)){
-      return false;
-    }
-    else if (b.is_right_bower(t)){
-      return true;
-    }
-    else if (a.is_left_bower(t)){
-      return false;
-    }
-    else if (b.is_left_bower(t)){
-      return true;
-    }
+               Suit trump){
+  Suit led = led_card.get_suit();
+  Suit A = a.get_suit();
+  Suit B = b.get_suit();
+  //if trump is led this will act exactly like Card_less(const Card &a, const Card &b, const std::string &trump)
+  //if a and b are both the led card or both not the led this will act exactly like Card_less(const Card &a, const Card &b, const std::string &trump)
+  if(led_card.get_suit() == trump || 
+      (A != led &&
+      B != led) ||
+      (A == led && 
+      B == led)){
+    return Card_less(a, b, trump);
   }
-  if (a.get_suit() != led_card.get_suit() && b.get_suit() != led_card.get_suit()){
-    return Card_less(a,b,trump);
+  else if (A != led && B){
+    return true;
   }
-  else if (a.get_suit() == t && b.get_suit() != t){
+  else if (A == led && B != led){
     return false;
-  } 
-  else if (b.get_suit() == t && a.get_suit() != t){
-    return true;
-  }
-  else if (a.get_suit() == led_card.get_suit() && b.get_suit() != led_card.get_suit()){
-    return false;
-  } 
-  else if (b.get_suit() == led_card.get_suit() && a.get_suit() != led_card.get_suit()){
-    return true;
-  }         
-  else if (a < b){
-    return true;
   }
   else{
     return false;
