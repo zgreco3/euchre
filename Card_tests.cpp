@@ -23,18 +23,35 @@ TEST(test_face_or_ace) {
     Card ace_spades = Card(ACE, SPADES);
     ASSERT_TRUE(ace_spades.is_face_or_ace());
 }
-TEST(test_is_bower) {
+TEST(test_is_right_bower_false) {
     const Suit &trump = HEARTS;
     Card three_spades = Card(THREE, SPADES);
     ASSERT_FALSE(three_spades.is_right_bower(trump));
-
+}
+TEST(test_is_left_bower_false) {
+    const Suit &trump = HEARTS;
+    Card three_spades = Card(THREE, SPADES);
+    ASSERT_FALSE(three_spades.is_left_bower(trump));
+}
+TEST(test_is_right_bower_true) {
+    const Suit &trump = HEARTS;
     Card jack_hearts = Card(JACK, HEARTS);
     ASSERT_TRUE(jack_hearts.is_right_bower(trump));
-
-    ASSERT_FALSE(three_spades.is_left_bower(trump));
-
+}
+TEST(test_is_right_bower_is_not_left_bower) {
+    const Suit &trump = HEARTS;
+    Card jack_hearts = Card(JACK, HEARTS);
+    ASSERT_FALSE(jack_hearts.is_left_bower(trump));
+}
+TEST(test_is_left_bower) {
+    const Suit &trump = HEARTS;
     Card jack_diamonds = Card(JACK, DIAMONDS);
     ASSERT_TRUE(jack_diamonds.is_left_bower(trump));
+}
+TEST(test_is_left_bower_is_not_right_bower) {
+    const Suit &trump = HEARTS;
+    Card jack_diamonds = Card(JACK, DIAMONDS);
+    ASSERT_FALSE(jack_diamonds.is_right_bower(trump));
 }
 TEST(test_card_less) {
     Card c1(ACE, HEARTS);
@@ -100,6 +117,22 @@ TEST(test_card_insertion) {
     ostringstream oss;
     oss << three_spades;
     ASSERT_EQUAL(oss.str(), "Three of Spades");
+}
+TEST(test_string_to_suit) {
+    string str = "Hearts";
+    ASSERT_EQUAL(string_to_suit(str), HEARTS);
+}
+TEST(test_is_trump_true) {
+    Card three_spades = Card(THREE, SPADES);
+    ASSERT_EQUAL(three_spades.is_trump(SPADES), true);
+}
+TEST(test_is_trump_false) {
+    Card three_spades = Card(THREE, SPADES);
+    ASSERT_EQUAL(three_spades.is_trump(HEARTS), false);
+}
+TEST(test_is_trump_left_bower) {
+    Card three_spades = Card(JACK, SPADES);
+    ASSERT_EQUAL(three_spades.is_trump(CLUBS), true);
 }
 TEST(test_is_less) {
     Suit trump = HEARTS;
