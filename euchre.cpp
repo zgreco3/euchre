@@ -7,9 +7,11 @@
 #include "Pack.h"
 #include <fstream>
 
+using namespace std;
+
 class Game {
     public:
-    Game(std::vector <Player *> pvec, std::istream& pack_input, bool shuff, int ptw)
+    Game(vector <Player *> pvec, istream& pack_input, bool shuff, int ptw)
         : players(pvec), pack(pack_input), ptw(ptw), shuff(shuff){}
     
     void play(){
@@ -27,10 +29,10 @@ class Game {
             const Card &upcard = pack.deal_one();
             Suit order_up_suit = upcard.get_suit();
             int indMP = 0;
-            std::cout << "Hand " << hcounter << std::endl;
+            cout << "Hand " << hcounter << endl;
             ++hcounter;
-            std::cout << players[dealerNum]->get_name() << " deals" << std::endl;
-            std::cout << upcard << " turned up" << std::endl;
+            cout << players[dealerNum]->get_name() << " deals" << endl;
+            cout << upcard << " turned up" << endl;
             make_trump(dealerNum, upcard, order_up_suit, indMP);
             dealOrdRes(dealerNum);
             play_hand(order_up_suit, dealerNum, indMP);
@@ -43,11 +45,11 @@ class Game {
             }
         }
         if (t1pts > t2pts){
-            std::cout << players[0]->get_name() << " and " 
+            cout << players[0]->get_name() << " and " 
             << players[2]->get_name() << " win!";
         }
         if (t1pts < t2pts){
-            std::cout << players[1]->get_name() << " and " 
+            cout << players[1]->get_name() << " and " 
             << players[3]->get_name() << " win!";
         }
         for (size_t i = 0; i < players.size(); ++i) {
@@ -56,7 +58,7 @@ class Game {
     }
     
     private: 
-    std::vector <Player *> players;
+    vector <Player *> players;
     Pack pack;
     int t1pts = 0;
     int t2pts = 0;
