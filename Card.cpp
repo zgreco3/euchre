@@ -267,8 +267,10 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card,
   Suit led = led_card.get_suit();
   Suit A = a.get_suit();
   Suit B = b.get_suit();
-  //if trump is led this will act exactly like Card_less(const Card &a, const Card &b, const std::string &trump)
-  //if a and b are both the led card or both not the led this will act exactly like Card_less(const Card &a, const Card &b, const std::string &trump)
+  //if trump is led this will act exactly like 
+  //Card_less(const Card &a, const Card &b, const std::string &trump)
+  //if a and b are both the led card or both not the led this will act exactly like 
+  //Card_less(const Card &a, const Card &b, const std::string &trump)
   if(led_card.get_suit() == trump || 
       (A != led &&
       B != led) ||
@@ -276,13 +278,14 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card,
       B == led)){
     return Card_less(a, b, trump);
   }
-  else if (A != led && B){
+  else if (A != led && B == led){
     return true;
   }
   else if (A == led && B != led){
     return false;
   }
   else{
+    cout << "error" << endl;
     return false;
   }
 }

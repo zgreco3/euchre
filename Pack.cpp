@@ -34,6 +34,7 @@ int i = 0;
 }
 Card Pack::deal_one(){
     next++;
+    //std::cout << "dealing..." << cards[next - 1] << std::endl;
     return cards[next - 1];
 }
 

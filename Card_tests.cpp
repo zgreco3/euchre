@@ -6,7 +6,7 @@
 
 using namespace std;
 
-
+//need a test with a led card and two more cards one of which is of led suit and one isnt(neither are trump)
 TEST(test_card_ctor) {
     Card c(ACE, HEARTS);
     ASSERT_EQUAL(ACE, c.get_rank());
