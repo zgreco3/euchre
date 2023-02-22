@@ -42,7 +42,9 @@ class Game {
             
             Suit trump = upcard_suit;
             if(make_trump(dealerNum, upcard, upcard_suit, indMP)){
-                trump = opposite_upcard_suit;
+                //if(make_trump(dealerNum, upcard, opposite_upcard_suit, indMP)){
+                    trump = opposite_upcard_suit;
+                //}
             }
             dealOrdRes(dealerNum);
             play_hand(trump, dealerNum, indMP);
@@ -55,41 +57,40 @@ class Game {
         }
         if (t1pts > t2pts){
             cout << players[0]->get_name() << " and " 
-            << players[2]->get_name() << " win!";
+            << players[2]->get_name() << " win!" << endl;
         }
         if (t1pts < t2pts){
             cout << players[1]->get_name() << " and " 
-            << players[3]->get_name() << " win!";
+            << players[3]->get_name() << " win!" << endl;
         }
         for (size_t i = 0; i < players.size(); ++i) {
             delete players[i];  
         }
     }
-    
-    private: 
-    vector <Player *> players;
-    Pack pack;
-    int t1pts = 0;
-    int t2pts = 0;
-    int ptw;
-    bool shuff;
-
-    void shuffle(){
+        void shuffle(){
         pack.shuffle();
     }
 
     void deal2(int dnum){
+        //cout << "first card" << dnum << endl;
         players[dnum]->add_card(pack.deal_one());
+        //cout << "second card" << dnum << endl;
         players[dnum]->add_card(pack.deal_one());
     }
     void deal3(int dnum){
+        //cout << "fir card" << dnum << endl;
         players[dnum]->add_card(pack.deal_one());
+        //cout << "sec card" << dnum << endl;
         players[dnum]->add_card(pack.deal_one());
+        //cout << "thir card" << dnum << endl;
         players[dnum]->add_card(pack.deal_one());
     }
 
     void dealOrdRes(int &dealOrder){
-        dealOrder = ++dealOrder % 4;
+        dealOrder++;
+        if(dealOrder > 3){
+            dealOrder = 0;
+        }
     }
 
     void deal(int &dealerNum){
@@ -281,7 +282,14 @@ class Game {
         cout << players[1]->get_name() << " and " <<  players[3]->get_name() 
             << " have " <<  t2pts << " points" << endl << endl; 
     }
-
+        
+    private: 
+    vector <Player *> players;
+    Pack pack;
+    int t1pts = 0;
+    int t2pts = 0;
+    int ptw;
+    bool shuff;
 };
 int main(int argc, char *argv[]){
     string isshuf = argv[2];

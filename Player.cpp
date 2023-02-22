@@ -75,7 +75,7 @@ class SimplePlayer : public Player{
         }
 
         virtual Card lead_card(Suit trump){
-            print_hand();
+            //print_hand();
             int ttally = 0;
             Card curLead = hand[0];
             for (size_t i = 0; i < hand.size(); i++){
@@ -111,70 +111,40 @@ class SimplePlayer : public Player{
         }
 
         virtual Card play_card(const Card &led_card, Suit trump){
-            print_hand();
-            int tcount = 0;
-            int trumpcount = 0;
+           //print_hand();
+            int ltally = 0;
+            Suit led = led_card.get_suit();
+            Card curLead = hand[0];
+            for (size_t i = 0; i < hand.size(); i++){
+                if (hand[i].is_trump(led) && !hand[i].is_left_bower(led)){
+                    ltally++;
+                }
+            }
+            if (ltally > 0){
+                for (size_t i = 0; i < hand.size(); i++){
+                    if (hand[i].get_suit() == led && Card_less(curLead, hand[i], led)
+                        && !hand[i].is_left_bower(led)){
+                        curLead = hand[i];
+                    }
+                }
+            }
+            else{
+                for (size_t i = 0; i < hand.size(); i++){
+                    if (Card_less(hand[i], curLead, led_card, trump)){
+                        curLead = hand[i];
+                    }
+                }
+            }
             int indT = 0;
-            Suit ltrump = led_card.get_suit();
-            Card lcard = hand[0];
-            //goes through entire hand
-            for (size_t i = 0; i < (hand.size()); ++i){
-                //if trump is equal to ledcard suit
-                if (hand[i].get_suit(trump) == ltrump){
-                    //increace tcount and set lcard to current index
-                    ++tcount;
-                    lcard = hand[i];
+            for (size_t i = 0; i < hand.size(); i++){
+                if(hand[i] == curLead){
                     indT = i;
                 }
-                else if (hand[i].is_trump(trump)){
-                    ++trumpcount;
-                }
             }
-
-            // if every card in the hand is trump
-            // we want to find largest trump to play
-            if (trumpcount == (int)hand.size()){
-                //go through the hand
-                for (size_t i = 0; i < (hand.size()); ++i){
-                    // if hand at i is larger than current lcard update index 
-                    // and lcard to new largest trump
-                    if (Card_less(lcard, hand[i], trump)){
-                        indT = i;
-                        lcard = hand[i];
-                    }
-                }
-            }
-
-            // if there are no trumps and no cards with ledcard suit
-            // we want to find lowest card to play
-            else if (tcount == 0){
-                //go through hand
-                for (size_t i = 0; i < (hand.size()); ++i){
-                    // if hand at i is less than current lcard update lcard to it
-                    if (Card_less(hand[i], lcard, led_card, trump)){
-                        indT = i;
-                        lcard = hand[i];
-                    }
-                }
-            }
-            // any other situation where all arent trump or there is no led card
-            // suit and not a full hand of trump
-            else{
-                //go through hand
-                for (size_t i = 0; i < (hand.size()); ++i){
-                    // if hand at i is larger than current lcard and if its == to 
-                    // led card suit update to current index
-                    if (Card_less(lcard, hand[i], led_card, trump) && 
-                    hand[i].get_suit() == ltrump){
-                        indT = i;
-                        lcard = hand[i];
-                    }
-                }
-            }
-                //erase card being played from hand and return the card being played
-                hand.erase(hand.begin() + indT);
-                return lcard;
+            hand.erase(hand.begin() + indT);
+            return curLead;
         }
+
         virtual void print_hand() const {
             for (size_t i = 0; i < (hand.size()); i++){
                 cout << "Simple player " << name << "'s hand: [" << i << 
@@ -236,7 +206,7 @@ class HumanPlayer : public Player{
             }
             //fix potentially
             else{
-                hand.erase(hand.begin() + in - 1);
+                hand.erase(hand.begin() + in);
                 hand.push_back(upcard);
                 sort(hand.begin(), hand.end());
             }

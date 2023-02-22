@@ -365,6 +365,27 @@ TEST(test_play_card_three_trump_one_no_led) {
 
   delete bob;
 }
+
+TEST(test_play_card_with_bowers) {
+  // Bob's hand
+  Player * bob = Player_factory("Bob", "Simple");
+  bob->add_card(Card(KING, HEARTS));
+  bob->add_card(Card(JACK, HEARTS));
+  bob->add_card(Card(ACE, HEARTS));
+
+
+  Suit trump = static_cast<Suit>(1);
+  // Bob plays
+  const Card card_led = Card(TEN, SPADES);
+
+  Card card_played = bob->play_card(card_led, trump);
+  //cout << card_played;
+  // Verify the card Bob selected right card to play
+  Card king_hearts(KING, HEARTS);
+  ASSERT_EQUAL(card_played, king_hearts); //check card played
+
+  delete bob;
+}
 //
   // we need more make trump
 //

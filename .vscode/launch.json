@@ -9,8 +9,9 @@
             "request": "launch",
             "name": "Debug",
             "program": "${workspaceFolder}/euchre.exe",
-            "args": ["pack.in", "noshuffle", "1", "Adi", "Simple", "Barbara", "Simple", "Chi-Chih", "Simple", "Dabbala", "Simple"],
-            "cwd": "${workspaceFolder}"
+            "args": ["pack.in", "noshuffle", "3", "Ivan", "Human", "Judea", "Human", "Kunle", "Human", "Liskov", "Human"],
+            "cwd": "${workspaceFolder}",
+            "stdio": ["euchre_test50.in", null, null]
         }
     ]
 }

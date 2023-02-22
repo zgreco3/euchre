@@ -155,6 +155,13 @@ TEST(test_is_less) {
     ASSERT_FALSE(Card_less(jack_diamonds, ten_hearts, trump));
     ASSERT_TRUE(Card_less(jack_diamonds, jack_hearts, trump));
 }
+
+TEST(Card_less_with_bower){
+    Suit trump = static_cast<Suit>(1);
+    // Bob plays
+    const Card card_led = Card(TEN, SPADES);
+    ASSERT_FALSE(Card_less(Card(JACK, HEARTS), Card(ACE, HEARTS), card_led, trump ))
+}
 // Add more test cases here
 
 TEST_MAIN()
