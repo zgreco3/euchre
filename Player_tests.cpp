@@ -386,6 +386,33 @@ TEST(test_play_card_with_bowers) {
 
   delete bob;
 }
+
+
+
+///NEW TESTS
+
+
+
+
+TEST(test_play_card_acespades_vs_jackspades) {
+  // Bob's hand
+  Player * bob = Player_factory("Bob", "Simple");
+  bob->add_card(Card(ACE, SPADES));
+  bob->add_card(Card(JACK, SPADES));
+
+
+  Suit trump = static_cast<Suit>(1);
+  // Bob plays
+  const Card card_led = Card(TEN, SPADES);
+
+  Card card_played = bob->play_card(card_led, trump);
+  //cout << card_played;
+  // Verify the card Bob selected right card to play
+  Card ace_spades(ACE, SPADES);
+  ASSERT_EQUAL(card_played, ace_spades); //check card played
+
+  delete bob;
+}
 //
   // we need more make trump
 //

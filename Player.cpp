@@ -111,46 +111,111 @@ class SimplePlayer : public Player{
         }
 
         virtual Card play_card(const Card &led_card, Suit trump){
-           //print_hand();
-            int ltally = 0;
-            Suit led = led_card.get_suit();
-            Card curLead = hand[0];
-            for (size_t i = 0; i < hand.size(); i++){
-                if (hand[i].is_trump(led) && !hand[i].is_left_bower(led)){
-                    ltally++;
-                }
-            }
-            if (ltally > 0){
-                for (size_t i = 0; i < hand.size(); i++){
-                    if (hand[i].get_suit() == led && Card_less(curLead, hand[i], led)
-                        && !hand[i].is_left_bower(led)){
-                        curLead = hand[i];
-                    }
-                }
-            }
-            else{
-                for (size_t i = 0; i < hand.size(); i++){
-                    if (Card_less(hand[i], curLead, led_card, trump)){
-                        curLead = hand[i];
-                    }
-                }
-            }
+            //print_hand();
+            int tcount = 0;
+            int trumpcount = 0;
             int indT = 0;
-            for (size_t i = 0; i < hand.size(); i++){
-                if(hand[i] == curLead){
+            Suit ltrump = led_card.get_suit(trump);
+            Card lcard = hand[0];
+            //goes through entire hand
+            for (size_t i = 0; i < (hand.size()); ++i){
+                //if trump is equal to ledcard suit
+                if (hand[i].get_suit(trump) == ltrump){
+                    //increace tcount and set lcard to current index
+                    ++tcount;
+                    lcard = hand[i];
                     indT = i;
                 }
+                else if (hand[i].is_trump(trump)){
+                    ++trumpcount;
+                }
             }
-            hand.erase(hand.begin() + indT);
-            return curLead;
-        }
 
-        virtual void print_hand() const {
-            for (size_t i = 0; i < (hand.size()); i++){
-                cout << "Simple player " << name << "'s hand: [" << i << 
-                "] " << hand[i] << endl;
+            // if every card in the hand is trump
+            // we want to find largest trump to play
+            if (trumpcount == (int)hand.size()){
+                //go through the hand
+                for (size_t i = 0; i < (hand.size()); ++i){
+                    // if hand at i is larger than current lcard update index 
+                    // and lcard to new largest trump
+                    if (Card_less(hand[i], lcard, trump)){
+                        indT = i;
+                        lcard = hand[i];
+                    }
+                }
             }
+
+            // if there are no trumps and no cards with ledcard suit
+            // we want to find lowest card to play
+            else if (tcount == 0){
+                //go through hand
+                for (size_t i = 0; i < (hand.size()); ++i){
+                    // if hand at i is less than current lcard update lcard to it
+                    if (Card_less(hand[i], lcard, led_card, trump)){
+                        indT = i;
+                        lcard = hand[i];
+                    }
+                }
+            }
+            // any other situation where all arent trump or there is no led card
+            // suit and not a full hand of trump
+            else{
+                //go through hand
+                for (size_t i = 0; i < (hand.size()); ++i){
+                    // if hand at i is larger than current lcard and if its == to 
+                    // led card suit update to current index
+                    if (Card_less(lcard, hand[i], led_card, trump) && 
+                    hand[i].get_suit(trump) == ltrump){
+                        indT = i;
+                        lcard = hand[i];
+                    }
+                }
+            }
+                //erase card being played from hand and return the card being played
+            hand.erase(hand.begin() + indT);
+            return lcard;
         }
+        // virtual Card play_card(const Card &led_card, Suit trump){
+        //    //print_hand();
+        //     int ltally = 0;
+        //     Suit led = led_card.get_suit();
+        //     Card curLead = hand[0];
+        //     for (size_t i = 0; i < hand.size(); i++){
+        //         if (hand[i].is_trump(led) && !hand[i].is_left_bower(trump)){
+        //             ltally++;
+        //         }
+        //     }
+        //     if (ltally > 0){
+        //         for (size_t i = 0; i < hand.size(); i++){
+        //             if (hand[i].get_suit() == led && Card_less(curLead, hand[i], led)
+        //                 && !hand[i].is_left_bower(led)){
+        //                 curLead = hand[i];
+        //             }
+        //         }
+        //     }
+        //     else{
+        //         for (size_t i = 0; i < hand.size(); i++){
+        //             if (Card_less(hand[i], curLead, led_card, trump)){
+        //                 curLead = hand[i];
+        //             }
+        //         }
+        //     }
+        //     int indT = 0;
+        //     for (size_t i = 0; i < hand.size(); i++){
+        //         if(hand[i] == curLead){
+        //             indT = i;
+        //         }
+        //     }
+        //     hand.erase(hand.begin() + indT);
+        //     return curLead;
+        // }
+
+        // virtual void print_hand() const {
+        //     for (size_t i = 0; i < (hand.size()); i++){
+        //         cout << "Simple player " << name << "'s hand: [" << i << 
+        //         "] " << hand[i] << endl;
+        //     }
+        // }
 };
 
 class HumanPlayer : public Player{
@@ -167,6 +232,7 @@ class HumanPlayer : public Player{
         }
         virtual void add_card(const Card &c){
             hand.push_back(c);
+            sort(hand.begin(), hand.end());
         }
         virtual void print_hand() const {
             for (size_t i = 0; i < (hand.size()); i++){
@@ -182,6 +248,11 @@ class HumanPlayer : public Player{
              ", please enter a suit, or \"pass\":\n";
             string in;
             cin >> in;
+
+            //delete this
+            //cout << in;
+            //
+
             if(in == "pass"){
                 return false;
             }
@@ -217,10 +288,13 @@ class HumanPlayer : public Player{
             int in;
             cout << "Human player " << name << ", please select a card:\n";
             cin >> in;
+            //delete after testing
+            //cout << in;
+            //
             assert(in == 0 || 1 || 2 || 3 || 4);
             Card temp = hand[in];
-            hand.erase(hand.begin() + in - 1);
-            sort(hand.begin(), hand.end());
+            hand.erase(hand.begin() + in);
+            //sort(hand.begin(), hand.end());
             return temp;
         }
 

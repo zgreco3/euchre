@@ -164,13 +164,20 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
     if (lhs.get_rank() < rhs.get_rank()){
       return 1;
     }
+    //Lowest to highest
+    //Spades(0), Hearts(), Clubs(2), Diamonds(3)
+    else if (lhs.get_rank() == rhs.get_rank() && lhs.get_suit() < rhs.get_suit()){
+        return 1;
+    }
     else{
       return 0;
     }
   }
 
   bool operator==(const Card &lhs, const Card &rhs){
-      if (rhs.get_rank() == lhs.get_rank()){
+      if (rhs.get_rank() == lhs.get_rank() && lhs.get_suit()
+                                         == rhs.get_suit()){
+
           return 1;
       }
       return 0;
@@ -264,19 +271,27 @@ bool Card_less(const Card &a, const Card &b, Suit trump){
 
 bool Card_less(const Card &a, const Card &b, const Card &led_card,
                Suit trump){
-  Suit led = led_card.get_suit();
-  Suit A = a.get_suit();
-  Suit B = b.get_suit();
+  Suit led = led_card.get_suit(trump);
+  Suit A = a.get_suit(trump);
+  Suit B = b.get_suit(trump);
+  // cout << A << endl;
+  // cout << B << endl;
   //if trump is led this will act exactly like 
   //Card_less(const Card &a, const Card &b, const std::string &trump)
   //if a and b are both the led card or both not the led this will act exactly like 
   //Card_less(const Card &a, const Card &b, const std::string &trump)
-  if(led_card.get_suit() == trump || 
+  if(led_card.get_suit(trump) == trump ||
       (A != led &&
       B != led) ||
       (A == led && 
       B == led)){
     return Card_less(a, b, trump);
+  }
+  if(A == trump){
+    return false;
+  }
+  else if(B == trump){
+    return true;
   }
   else if (A != led && B == led){
     return true;

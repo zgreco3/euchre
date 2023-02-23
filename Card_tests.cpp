@@ -137,18 +137,36 @@ TEST(test_is_trump_left_bower) {
 TEST(test_is_less) {
     Suit trump = HEARTS;
     Card led_card = Card(KING, HEARTS);
+    Card led_card2 = Card(KING, DIAMONDS);
     Card jack_hearts = Card(JACK, HEARTS);
     Card jack_spades = Card(JACK, SPADES);
+    Card nine_hearts = Card(NINE, HEARTS);
+    Card nine_diamonds = Card(NINE, DIAMONDS);
     Card jack_diamonds = Card(JACK, DIAMONDS);
     Card ten_spades = Card(TEN, SPADES);
     Card ten_hearts = Card(TEN, HEARTS);
     Card ten_diamonds = Card(TEN, DIAMONDS);
+    Card queen_diamonds = Card(QUEEN, DIAMONDS);
     ASSERT_FALSE(Card_less(jack_hearts, jack_diamonds, led_card, trump));
     ASSERT_TRUE(Card_less(jack_diamonds, jack_hearts, led_card, trump));
     ASSERT_FALSE(Card_less(ten_hearts, ten_spades, led_card, trump));
     ASSERT_TRUE(Card_less(ten_spades, ten_hearts, led_card, trump));
     ASSERT_TRUE(Card_less(ten_diamonds, ten_hearts, led_card, trump));
     ASSERT_TRUE(Card_less(jack_spades, ten_hearts, led_card, trump));
+
+    ASSERT_TRUE(Card_less(queen_diamonds, jack_hearts, DIAMONDS));
+    Card ace_clubs = Card(ACE, CLUBS);
+    Card ace_spades = Card(ACE, SPADES);
+    //Spades is lower than clubs
+    ASSERT_TRUE(Card_less(ace_spades, ace_clubs, HEARTS));
+    //new case
+    ASSERT_EQUAL(jack_diamonds.get_suit(HEARTS), HEARTS);
+    //
+
+    //new case
+    //
+    ASSERT_TRUE(Card_less(nine_diamonds, nine_hearts, led_card2, trump));
+    //
 
     ASSERT_TRUE(Card_less(ten_spades, ten_hearts, trump));
     ASSERT_TRUE(Card_less(ten_diamonds, ten_hearts, trump));
